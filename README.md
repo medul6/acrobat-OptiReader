@@ -3,7 +3,7 @@ acrobat-OptiReader
 
 Description
 -------
-This is an AppleScript to optimize and "Reader-Activate" opened pdf files in Acrobat.
+This is an AppleScript-Application to optimize and "Reader-Activate" opened pdf files in Acrobat.
 There are different script versions for different Acrobat versions because this script
 uses GUI-Scripting and every Acrobat version has a different menu layout ...
 Use the one for your Acrobat version and don't use the others, they won't work anyway ...
