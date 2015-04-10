@@ -1,0 +1,107 @@
+-- main
+property functionChoice : {"Optimieren & Reader-Aktivierung"}
+my whatFunction()
+
+-- еееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееее
+
+on whatFunction()
+	set functionChoice to choose from list {"Optimieren", "Optimieren & Reader-Aktivierung", "Nur Reader-Aktivierung"} default items functionChoice with prompt "Funktion wКhlen:" OK button name "Do it!"
+	
+	if the functionChoice = {"Optimieren"} then
+		my optimizePDF()
+		tell application "Adobe Acrobat"
+			close active doc
+		end tell
+	else if the functionChoice = {"Optimieren & Reader-Aktivierung"} then
+		my optimizePDF()
+		my aktivatePDF()
+		tell application "Adobe Acrobat"
+			close active doc
+		end tell
+	else if the functionChoice = {"Nur Reader-Aktivierung"} then
+		my aktivatePDF()
+		tell application "Adobe Acrobat"
+			close active doc
+		end tell
+	end if
+end whatFunction
+
+-- еееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееее
+
+on optimizePDF() -- hier die optimierung!
+	tell application "System Events"
+		tell its process "AdobeAcrobat"
+			--------------------------------------------------------------------------
+			repeat until exists menu bar 1
+				--
+			end repeat
+			click menu item "Optimiertes PDF..." of menu "Speichern als╩..." of menu item "Speichern als╩..." of menu "Datei" of menu bar item "Datei" of menu bar 1
+			--------------------------------------------------------------------------
+			repeat until exists window "PDF-Optimierung"
+				--
+			end repeat
+			tell its window "PDF-Optimierung"
+				if value of pop up button 1 is "sk-Optimiert" then
+					click button "OK"
+				else
+					display dialog "Es muss das sk-Optimierungs-Preset gewКhlt sein!!!" buttons "OK" default button "OK"
+				end if
+			end tell
+			--------------------------------------------------------------------------
+			repeat until exists window "Optimierte speichern unter"
+				--
+			end repeat
+			tell its window "Optimierte speichern unter"
+				set fileNameVariable to text field 1's value
+				set value of text field 1 to fileNameVariable --& "-optimized"
+				tell its button "Speichern"
+					click
+				end tell
+				try
+					tell sheet 1
+						click button "Ersetzen"
+					end tell
+				end try
+			end tell
+			--------------------------------------------------------------------------
+		end tell
+	end tell
+end optimizePDF
+
+-- еееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееее
+
+on aktivatePDF() -- hier kommt die reader aktivierung!
+	tell application "System Events"
+		tell its process "AdobeAcrobat"
+			--------------------------------------------------------------------------
+			repeat until exists menu bar 1
+				--
+			end repeat
+			click menu item "Weitere Werkzeuge aktivieren (mit AusfЯllen und Speichern von Formularen)..." of menu "PDF mit erweiterten Reader-Funktionen" of menu item "PDF mit erweiterten Reader-Funktionen" of menu "Speichern als╩..." of menu item "Speichern als╩..." of menu "Datei" of menu bar item "Datei" of menu bar 1
+			--------------------------------------------------------------------------
+			repeat until exists window "Verwendungsrechte in Adobe Acrobat Reader DC aktivieren"
+				--
+			end repeat
+			click button "Jetzt speichern" of window "Verwendungsrechte in Adobe Acrobat Reader DC aktivieren"
+			--------------------------------------------------------------------------
+			repeat until exists window "Sichern"
+				--
+			end repeat
+			tell window "Sichern"
+				set fileNameVariable to text field 1's value
+				set value of text field 1 to fileNameVariable --& "-readeractivated"
+				tell its button "Sichern"
+					click
+				end tell
+				try
+					tell sheet 1
+						click button "Ersetzen"
+					end tell
+				end try
+			end tell
+			--------------------------------------------------------------------------
+		end tell
+	end tell
+end aktivatePDF
+
+-- еееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееее
