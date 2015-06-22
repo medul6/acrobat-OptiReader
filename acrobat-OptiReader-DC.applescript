@@ -1,30 +1,67 @@
 -- main
 property functionChoice : {"Optimieren & Reader-Aktivierung"}
+global thePreferenceReference
+
+set thePreferencePath to "~/Library/Preferences/"
+set thePreferenceFile to "com.sk.acrobat-OptiReader-DC"
+set thePreferenceReference to thePreferencePath & thePreferenceFile
+
 my whatFunction()
 
 -- еееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееее
 
 on whatFunction()
+	
+	my readPreferences()
+	
 	set functionChoice to choose from list {"Optimieren", "Optimieren & Reader-Aktivierung", "Nur Reader-Aktivierung"} default items functionChoice with prompt "Funktion wКhlen:" OK button name "Do it!"
 	
 	if the functionChoice = {"Optimieren"} then
+		my writePreferences()
 		my optimizePDF()
 		tell application "Adobe Acrobat"
 			close active doc
 		end tell
 	else if the functionChoice = {"Optimieren & Reader-Aktivierung"} then
+		my writePreferences()
 		my optimizePDF()
 		my aktivatePDF()
 		tell application "Adobe Acrobat"
 			close active doc
 		end tell
 	else if the functionChoice = {"Nur Reader-Aktivierung"} then
+		my writePreferences()
 		my aktivatePDF()
 		tell application "Adobe Acrobat"
 			close active doc
 		end tell
 	end if
+	
 end whatFunction
+
+-- еееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееее
+
+on readPreferences()
+	try
+		--еееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееее
+		set scriptStringToRead to "defaults read" & space & thePreferenceReference & space & "functionChoice"
+		log scriptStringToRead
+		set functionChoice to (do shell script scriptStringToRead) as list
+		--еееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееее
+	end try
+end readPreferences
+
+-- еееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееее
+
+on writePreferences()
+	try
+		--еееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееее
+		set scriptStringToWrite to "defaults write" & space & thePreferenceReference & space & "functionChoice" & space & quoted form of (functionChoice as string)
+		log scriptStringToWrite
+		do shell script scriptStringToWrite
+		--еееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееее
+	end try
+end writePreferences
 
 -- еееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееееее
 
